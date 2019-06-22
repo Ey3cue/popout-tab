@@ -28,8 +28,6 @@
   },
 
   "permissions": [
-    "activeTab",
-    "contextMenus",
-    "tabs"
+    "contextMenus"
   ]
 }
