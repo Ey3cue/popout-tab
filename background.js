@@ -30,9 +30,26 @@ const togglePopout = () => {
   })
 }
 
+const onMainClose = () => {
+  browser.windows.getAll({ windowTypes: ['normal'] }, (windows) => {
+    // If there's no more "main" windows...
+    if (windows.length === 0) {
+      // Close each popup
+      browser.tabs.query({ windowType: 'popup' }, tabs => {
+        for (const tab of tabs) {
+          browser.tabs.remove(tab.id)
+        }
+      })
+    }
+  })
+}
+
+// Add listeners
 browser.browserAction.onClicked.addListener(togglePopout)
 browser.commands.onCommand.addListener(command => {
   if (command === 'toggle_popout') { togglePopout() }
 })
 
 browser.contextMenus.create({ title: 'Toggle Popout', contexts: ['page'], onclick: togglePopout })
+
+browser.windows.onRemoved.addListener(onMainClose)
